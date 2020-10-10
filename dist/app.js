@@ -8,17 +8,38 @@ const express_1 = __importDefault(require("express"));
 const axios_1 = __importDefault(require("axios"));
 const config_1 = __importDefault(require("./config"));
 const morgan_1 = __importDefault(require("morgan"));
+const url_1 = __importDefault(require("url"));
 const app = express_1.default();
 // 日志
 app.use(morgan_1.default('short'));
 // https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx520c15f417810387&redirect_uri=http:/xxxx.com&response_type=code&scope=snsapi_base&state=2#wechat_redirect
+// 重定向到微信登陆
 app.get('/', (req, res) => {
+    let target = config_1.default.ID2url[req.query['state']];
+    if (!target) {
+        res.json({
+            code: 403,
+            msg: '参数缺失or错误 或 目标地址未配置',
+        });
+    }
+    let myhost = url_1.default.format({
+        protocol: req.protocol,
+        host: req.get('host'),
+    });
+    myhost += '/code2openid';
+    // 重定向
+    res.redirect(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${config_1.default.appid}&redirect_uri=${encodeURIComponent(myhost)}&response_type=code&scope=snsapi_base&state=${req.query['state']}#wechat_redirect`);
+});
+app.get('/code2openid', (req, res) => {
     // 获取到url上的code
     const code = req.query['code'];
     let target = config_1.default.ID2url[req.query['state']];
     console.log({ code, target });
     if (!(code && target)) {
-        res.send('参数缺失or错误 或 目标地址未配置');
+        res.json({
+            code: 403,
+            msg: '参数缺失or错误 或 目标地址未配置',
+        });
     }
     target = encodeURIComponent(target);
     //
@@ -41,7 +62,7 @@ app.get('/', (req, res) => {
         });
     });
 });
-app.listen(config_1.default.port);
+console.log(app.listen(config_1.default.port).address());
 /* 开启 https
  *
  *
