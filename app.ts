@@ -1,10 +1,11 @@
 /// <reference path = "./app.d.ts" />
 import express from 'express'
 import axios from 'axios'
-import config from './config'
 import morgan from 'morgan'
 import url from 'url'
+import dotenv from 'dotenv'
 
+dotenv.config()
 const app = express()
 // 日志
 app.use(morgan('short'))
@@ -12,12 +13,13 @@ app.use(morgan('short'))
 
 // 重定向到微信登陆
 app.get('/', (req, res) => {
-  let target = config.ID2url[<string>req.query['state']]
+  let target = key2url(<string>req.query['state'])
   if (!target) {
     res.json({
       code: 403,
       msg: '参数缺失or错误 或 目标地址未配置',
     })
+    return
   }
   let myhost = url.format({
     protocol: req.protocol,
@@ -27,7 +29,7 @@ app.get('/', (req, res) => {
   // 重定向
   res.redirect(
     `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${
-      config.appid
+      process.env.APPID
     }&redirect_uri=${encodeURIComponent(myhost)}&response_type=code&scope=snsapi_base&state=${
       req.query['state']
     }#wechat_redirect`
@@ -37,7 +39,7 @@ app.get('/', (req, res) => {
 app.get('/code2openid', (req, res) => {
   // 获取到url上的code
   const code = req.query['code']
-  let target = config.ID2url[<string>req.query['state']]
+  let target = key2url(<string>req.query['state'])
 
   console.log({ code, target })
 
@@ -46,12 +48,13 @@ app.get('/code2openid', (req, res) => {
       code: 403,
       msg: '参数缺失or错误 或 目标地址未配置',
     })
+    return
   }
   target = encodeURIComponent(target)
   //
   axios
     .get(
-      `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${config.appid}&secret=${config.secret}&code=${code}&grant_type=authorization_code`
+      `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${process.env.APPID}&secret=${process.env.SECRET}&code=${code}&grant_type=authorization_code`
     )
     .then((RV) => {
       const data: resData = RV.data
@@ -70,7 +73,7 @@ app.get('/code2openid', (req, res) => {
     })
 })
 
-console.log(app.listen(config.port).address())
+console.log(app.listen(process.env.PORT).address())
 
 /* 开启 https 
  * 
@@ -79,3 +82,7 @@ http.createServer(app).listen(80);
 https.createServer({  }, app).listen(443);
  * 
  */
+
+function key2url(key: string): string {
+  return process.env[key] || ''
+}
