@@ -4,11 +4,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // key => 业务id
 // value => 业务地址
 const ID2url = {
-    appa: 'http://qq.com',
+    test1: 'http://wuxinke.top:13000',
 };
 const ED = {
     ID2url,
-    port: 3000,
+    port: 13000,
     appid: 'wx251f8bda035be26e',
     secret: '90b2bb3541618609189c97f898c343e8',
 };

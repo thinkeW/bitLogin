@@ -12,7 +12,9 @@ npm i
 # 如果需要开发则要安装typescript
 # tsc
 # 部署
-npx pm2 start ./dist/app.js
+npx pm2 start ./dist/app.js --name bitlogin
+# 重启
+npx pm2 restart bitlogin
 ```
 
 ### 查看日志
