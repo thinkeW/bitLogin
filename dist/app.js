@@ -17,6 +17,7 @@ app.use(morgan_1.default('short'));
 // 重定向到微信登陆
 app.get('/', (req, res) => {
     let target = key2url(req.query['state']);
+    const redirectOther = Boolean(req.query['redirectOther']);
     if (!target) {
         res.json({
             code: 403,
@@ -30,7 +31,7 @@ app.get('/', (req, res) => {
     });
     myhost += '/code2openid';
     // 重定向
-    res.redirect(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${process.env.APPID}&redirect_uri=${encodeURIComponent(myhost)}&response_type=code&scope=snsapi_base&state=${req.query['state']}#wechat_redirect`);
+    res.redirect(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${process.env.APPID}&redirect_uri=${encodeURIComponent(redirectOther ? target : myhost)}&response_type=code&scope=snsapi_base&state=${req.query['state']}#wechat_redirect`);
 });
 app.get('/code2openid', (req, res) => {
     // 获取到url上的code

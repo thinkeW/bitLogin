@@ -14,6 +14,7 @@ app.use(morgan('short'))
 // 重定向到微信登陆
 app.get('/', (req, res) => {
   let target = key2url(<string>req.query['state'])
+  const redirectOther = Boolean(<string>req.query['redirectOther'])
   if (!target) {
     res.json({
       code: 403,
@@ -30,9 +31,9 @@ app.get('/', (req, res) => {
   res.redirect(
     `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${
       process.env.APPID
-    }&redirect_uri=${encodeURIComponent(myhost)}&response_type=code&scope=snsapi_base&state=${
-      req.query['state']
-    }#wechat_redirect`
+    }&redirect_uri=${encodeURIComponent(
+      redirectOther ? target : myhost
+    )}&response_type=code&scope=snsapi_base&state=${req.query['state']}#wechat_redirect`
   )
 })
 
