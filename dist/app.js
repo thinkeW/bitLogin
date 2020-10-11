@@ -53,17 +53,20 @@ app.get('/code2openid', (req, res) => {
         });
         return;
     }
-    target = encodeURIComponent(target);
     //
     axios_1.default
         .get(`https://api.weixin.qq.com/sns/oauth2/access_token?appid=${process.env.APPID}&secret=${process.env.SECRET}&code=${code}&grant_type=authorization_code`)
         .then((RV) => {
         const data = RV.data;
         if (!data.openid) {
-            res.json(data);
+            res.json({
+                code: 5001,
+                msg: '获取openID错误',
+                data,
+            });
         }
         else {
-            res.redirect(`${target}?openid=${data.openid}`);
+            res.redirect(`${target}/?openid=${data.openid}`);
         }
     })
         .catch((err) => {

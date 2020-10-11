@@ -60,7 +60,6 @@ app.get('/code2openid', (req, res) => {
     })
     return
   }
-  target = encodeURIComponent(target)
   //
   axios
     .get(
@@ -69,9 +68,13 @@ app.get('/code2openid', (req, res) => {
     .then((RV) => {
       const data: resData = RV.data
       if (!data.openid) {
-        res.json(data)
+        res.json({
+          code: 5001,
+          msg: '获取openID错误',
+          data,
+        })
       } else {
-        res.redirect(`${target}?openid=${data.openid}`)
+        res.redirect(`${target}/?openid=${data.openid}`)
       }
     })
     .catch((err) => {
