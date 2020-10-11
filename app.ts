@@ -9,6 +9,15 @@ dotenv.config()
 const app = express()
 // 日志
 app.use(morgan('short'))
+//设置允许跨域访问该服务.
+app.all('*', function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Content-Type')
+  res.header('Access-Control-Allow-Methods', '*')
+  // res.header('Content-Type', 'application/json;charset=utf-8')
+  next()
+})
+
 // https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx520c15f417810387&redirect_uri=http:/xxxx.com&response_type=code&scope=snsapi_base&state=2#wechat_redirect
 
 // 重定向到微信登陆
