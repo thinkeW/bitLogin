@@ -1,6 +1,12 @@
 # 公众号换取 openID
 
+## 参考文档
+
 https://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/
+
+ https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html 
+
+## 部署
 
 > 需要 node 10 以上
 >
@@ -21,13 +27,15 @@ npx pm2 restart bitlogin
 npx pm2 log bitlogin
 ```
 
-## 使用
+## api使用
 
 ### 登陆
 
 获取 code
 
 > 默认跳转下一个接口，不需要跳转的`redirectOther=1`
+
+**xxxx.yy **这个域名必须在公众号上配置`公众号设置`=>`网页授权域名`
 
 `http://xxxx.yy/?state=key&redirectOther=0`
 
