@@ -9,6 +9,7 @@ const axios_1 = __importDefault(require("axios"));
 const morgan_1 = __importDefault(require("morgan"));
 const url_1 = __importDefault(require("url"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const path_1 = __importDefault(require("path"));
 dotenv_1.default.config();
 const app = express_1.default();
 // 日志
@@ -77,6 +78,8 @@ app.get('/code2openid', (req, res) => {
         });
     });
 });
+// 微信授权文件
+app.use(express_1.default.static(path_1.default.join(__dirname, '../static')));
 console.log(app.listen(process.env.PORT).address());
 /* 开启 https
  *

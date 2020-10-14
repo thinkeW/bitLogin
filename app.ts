@@ -4,6 +4,7 @@ import axios from 'axios'
 import morgan from 'morgan'
 import url from 'url'
 import dotenv from 'dotenv'
+import path from 'path'
 
 dotenv.config()
 const app = express()
@@ -85,6 +86,10 @@ app.get('/code2openid', (req, res) => {
       })
     })
 })
+
+// 微信授权文件
+
+app.use(express.static(path.join(__dirname, '../static')))
 
 console.log(app.listen(process.env.PORT).address())
 

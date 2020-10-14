@@ -1,16 +1,18 @@
+
+
 # 公众号换取 openID
 
 ## 参考文档
 
 https://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/
 
- https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html 
+https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html
 
 ## 部署
 
 > 需要 node 10 以上
 >
-> docker 可使用 node 官方容器镜像
+> docker 可使用 node:12-alpine 镜像
 
 ```shell
 # 安装依赖
@@ -27,7 +29,7 @@ npx pm2 restart bitlogin
 npx pm2 log bitlogin
 ```
 
-## api使用
+## api 使用
 
 ### 登陆
 
@@ -56,3 +58,24 @@ npx pm2 log bitlogin
 | ----- | ------------------------------------------------ | ---- |
 | code  | 微信登陆后获得的 code                            | 是   |
 | state | 业务对应的 key，这个每个业务都需要在后台进行配置 | 是   |
+
+### .env 文件
+
+根目录下须有该文件
+
+下面是模板
+
+```
+# 业务配置 key=链接
+# 变更后务必重启服务
+test1=http://wuxinke.top:13000
+ww4=https://wishingwall.bitworkshop.cn
+
+# 端口
+PORT=13000
+# appid & secret
+APPID=xxxxxx
+SECRET=xxxxx
+
+```
+
